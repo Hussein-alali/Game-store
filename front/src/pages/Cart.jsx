@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import CartTable from '../components/CartTable';
 import Footer from '../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Cart = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,23 +25,19 @@ const Cart = () => {
         <hr />
         <CartTable />
         <hr />
-        <div style={{ marginTop: '1rem' }}>
-            
-          <button
-            className="checkout-btn"
-            onClick={() => navigate('/checkout')}
-            disabled={false /* optionally disable if cart empty */}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#007bff',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
-            Proceed To Checkout
-          </button>
+        <div >
+             <Link to="/Checkout" style={{ 
+              color: 'white' ,
+              float:'right',
+              backgroundColor:'#007BFF',
+              padding:15,
+              fontSize:18,
+              marginTop:20,
+              cursor:'pointer',
+              border:'none',
+              textDecoration:'none'
+              
+              }} >Proceed To Checkout</Link>
         </div>
       </div>
       <Footer />

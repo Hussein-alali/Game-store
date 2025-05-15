@@ -16,16 +16,6 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
         <Link to="/">Home</Link>
         <Link to="/products">Products</Link>
         <Link to="/cart">Cart</Link>
-
-        {isLoggedIn ? (
-          <button className="btn" onClick={handleSignOut}>
-            Sign out
-          </button>
-        ) : (
-          <Link to="/signin">
-            <button className="btn">Sign in</button>
-          </Link>
-        )}
       </div>
     </div>
   );

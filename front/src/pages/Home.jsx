@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../components/Header';
+import Headerforhome from '../components/Headerforhome';
 import LandingPage from '../components/LandingPage';
 import TrendingGames from '../components/TrendingGames';
 import Footer from '../components/Footer';
@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 const Home = ({ isLoggedIn, setIsLoggedIn }) => {
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      <Headerforhome isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <LandingPage />
       <TrendingGames />
       <Footer/>
