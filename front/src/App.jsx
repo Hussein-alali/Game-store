@@ -6,7 +6,8 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import UserOrders from './pages/UserOrders';
-
+import Admin from './pages/Admin';
+import Products from './pages/Products';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('loggedIn') === 'true';
@@ -24,6 +25,8 @@ const App = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/UserOrders" element={<UserOrders />} />
+      <Route path="/Admin" element={<Admin />} />
+      <Route path="/Products" element={<Products />} />
        </Routes>
   );
 };
