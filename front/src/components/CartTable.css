@@ -1,236 +1,334 @@
 .cart-container {
   max-width: 1200px;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
-.cart-loading {
+.cart-title {
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
   text-align: center;
-  padding: 3rem 1rem;
+  font-weight: 700;
 }
 
-.loader {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.cart-error {
-  text-align: center;
-  padding: 2rem 1rem;
-  color: #e74c3c;
-}
-
-.cart-error button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.empty-cart {
-  text-align: center;
-  padding: 3rem 1rem;
-}
-
-.empty-cart p {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.empty-cart button {
-  padding: 0.75rem 1.5rem;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.empty-cart button:hover {
-  background: #2980b9;
-}
-
-.cart-items {
+.cart-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
-.cart-item {
+.cart-item-card {
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.cart-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.cart-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-.game-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.game-info img {
+.cart-item-image {
   width: 100%;
   height: 200px;
+  overflow: hidden;
+}
+
+.cart-item-image img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
+  transition: transform 0.3s ease;
 }
 
-.game-details {
-  flex: 1;
+.cart-item-card:hover .cart-item-image img {
+  transform: scale(1.05);
 }
 
-.game-details h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.2rem;
-  color: #333;
+.cart-item-details {
+  padding: 1.5rem;
 }
 
-.game-details p {
-  margin: 0.25rem 0;
-  color: #666;
+.cart-item-details h3 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.platform-badge {
+  margin-bottom: 1rem;
+}
+
+.platform-badge span {
+  background: linear-gradient(90deg, #0606dc 0%, #1e40af 100%);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.price-tag {
+  font-size: 1.5rem;
+  color: #e53935;
+  font-weight: 700;
+  margin-bottom: 1rem;
 }
 
 .quantity-controls {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 1rem;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
+  background: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 12px;
 }
 
-.quantity-controls button {
-  background: #f0f0f0;
-  border: none;
-  border-radius: 4px;
-  width: 32px;
-  height: 32px;
-  font-size: 1.2rem;
+.quantity-btn {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 }
 
-.quantity-controls button:hover:not(:disabled) {
-  background: #e0e0e0;
+.quantity-btn:hover:not(:disabled) {
+  background: #e9ecef;
+  border-color: #ced4da;
 }
 
-.quantity-controls button:disabled {
+.quantity-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.quantity-controls span {
+.quantity-display {
   font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
   min-width: 2rem;
   text-align: center;
 }
 
-.item-total {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2c3e50;
+.item-subtotal {
+  font-size: 1.1rem;
+  color: #495057;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 12px;
   text-align: center;
-  margin: 1rem 0;
 }
 
-.remove-button {
+.remove-btn {
   width: 100%;
-  padding: 0.5rem;
-  background: #ff4757;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  padding: 0.75rem;
+  background: #fff;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
 }
 
-.remove-button:hover {
-  background: #ff6b81;
+.remove-btn:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.remove-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.remove-btn:hover svg {
+  transform: rotate(90deg);
 }
 
 .cart-summary {
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin-top: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin-top: 3rem;
 }
 
-.total {
+.summary-details {
+  margin-bottom: 2rem;
+}
+
+.summary-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 1.1rem;
+  color: #495057;
 }
 
-.total span:last-child {
-  font-weight: bold;
-  color: #2c3e50;
+.summary-row.total {
+  border-bottom: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
 }
 
 .checkout-button {
   width: 100%;
   padding: 1rem;
-  background: #2ecc71;
+  background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
   font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .checkout-button:hover {
-  background: #27ae60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+}
+
+.cart-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.cart-error {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #dc3545;
+}
+
+.cart-error button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #0606dc;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cart-error button:hover {
+  background: #0505c3;
+  transform: translateY(-2px);
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #666;
+}
+
+.empty-cart svg {
+  margin-bottom: 1.5rem;
+}
+
+.empty-cart h2 {
+  font-size: 1.75rem;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.empty-cart p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.empty-cart button {
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #0606dc 0%, #1e40af 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.empty-cart button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 6, 220, 0.2);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .cart-items {
+  .cart-grid {
     grid-template-columns: 1fr;
   }
 
-  .game-info {
-    flex-direction: row;
+  .cart-title {
+    font-size: 1.75rem;
   }
 
-  .game-info img {
-    width: 120px;
-    height: 120px;
+  .cart-summary {
+    padding: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .game-info {
-    flex-direction: column;
+  .cart-container {
+    padding: 0 1rem;
   }
 
-  .game-info img {
-    width: 100%;
-    height: 160px;
+  .cart-title {
+    font-size: 1.5rem;
+  }
+
+  .cart-item-details {
+    padding: 1rem;
+  }
+
+  .quantity-controls {
+    padding: 0.5rem;
+  }
+
+  .quantity-btn {
+    width: 32px;
+    height: 32px;
   }
 } 
