@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./db/connect');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Initialize Express
@@ -13,20 +14,20 @@ app.use(express.json()); // Parse JSON bodies
 // Database connection
 connectDB();
 
+// DB status endpoint
 app.get('/api/dbstatus', (req, res) => {
-    res.json({
-      status: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-      dbName: mongoose.connection.name,
-      host: mongoose.connection.host
-    });
+  res.json({
+    status: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    dbName: mongoose.connection.name,
+    host: mongoose.connection.host
   });
-// Add error handling middleware (last)
+});
+
+// Error handler middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something broke!' });
- });
-
-
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something broke!' });
+});
 
 // Routes
 app.use('/api/games', require('./routes/games'));
@@ -37,14 +38,4 @@ app.use('/api/admin', require('./routes/admin'));
 
 // Start server
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-
-
-
-
-
-
-
-db/connect
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

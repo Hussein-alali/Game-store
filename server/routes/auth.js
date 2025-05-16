@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
+const { body } = require('express-validator');
 
 // User registration
 router.post('/register', async (req, res) => {

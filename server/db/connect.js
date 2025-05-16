@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const MONGODB_URI = 'mongodb+srv://web1:web1@cluster0.jvxlrpl.mongodb.net/gamestore?retryWrites=true&w=majority';
-    
+    const MONGODB_URI = process.env.MONGO_URI;
+
     await mongoose.connect(MONGODB_URI, {
       dbName: 'gamestore',
       serverSelectionTimeoutMS: 5000,
@@ -12,10 +12,9 @@ const connectDB = async () => {
 
     console.log('✅ MongoDB Connected');
   } catch (error) {
-    console.error('❌ Connection failed:', error.message);
+    console.error('❌ MongoDB connection error:', error.message);
     process.exit(1);
   }
 };
 
-
-export default connectDB;
+module.exports = connectDB;
