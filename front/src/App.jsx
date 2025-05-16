@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import UserOrders from './pages/UserOrders';
+import AdminPage from './pages/AdminPage';
+import ProductsPage from './pages/ProductsPage';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -24,6 +26,9 @@ const App = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/UserOrders" element={<UserOrders />} />
+      <Route path='/Admin' element={<AdminPage/>}/>
+      <Route path='/Products' element={<ProductsPage/>}/>
+
        </Routes>
   );
 };
