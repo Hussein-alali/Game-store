@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
@@ -18,6 +18,9 @@ const AdminPanel = () => {
     severity: 'success'
   });
 
+  // Ref to store the timeout id for snackbar
+  const snackbarTimeoutRef = useRef(null);
+
   const categories = ['Action', 'Adventure', 'RPG', 'Strategy', 'Sports', 'Puzzle', 'Horror', 'Simulation'];
 
   useEffect(() => {
@@ -34,6 +37,28 @@ const AdminPanel = () => {
       setLoading(false);
     }, 1000);
   }, []);
+
+  // Effect to auto-close snackbar for "Game deleted successfully" after 4 seconds
+  useEffect(() => {
+    if (
+      snackbar.open &&
+      snackbar.message === 'Game deleted successfully'
+    ) {
+      // Clear any previous timeout
+      if (snackbarTimeoutRef.current) {
+        clearTimeout(snackbarTimeoutRef.current);
+      }
+      snackbarTimeoutRef.current = setTimeout(() => {
+        setSnackbar((prev) => ({ ...prev, open: false }));
+      }, 4000);
+      // Cleanup on unmount or snackbar change
+      return () => {
+        if (snackbarTimeoutRef.current) {
+          clearTimeout(snackbarTimeoutRef.current);
+        }
+      };
+    }
+  }, [snackbar.open, snackbar.message]);
 
   const handleDialogOpen = () => setOpenDialog(true);
   const handleDialogClose = () => {

@@ -10,6 +10,9 @@ const UserSchema = new mongoose.Schema({
   age: { type: Number, required: true },
   gender: { type: String, required: true },
   country: { type: String, required: true },
+  isAdmin: { type: Boolean, default: false }
+}, {
+  timestamps: true
 });
 
 
@@ -19,5 +22,17 @@ UserSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
+
+// Method to compare password
+UserSchema.methods.comparePassword = async function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+// Method to get public profile
+UserSchema.methods.getPublicProfile = function() {
+  const userObject = this.toObject();
+  delete userObject.password;
+  return userObject;
+};
 
 module.exports = mongoose.model('User', UserSchema);

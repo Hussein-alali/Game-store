@@ -1,14 +1,16 @@
-/* AdminPanel.css */
+/* AdminPanel.css - Modern, Professional Redesign */
+
 .admin-panel-container {
   margin: 0;
-  font-family: '"Roboto", sans-serif';
-  background-color: #f7f9fc;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 60%, #e0e7ff 100%);
   min-height: 100vh;
+  color: #1e293b;
 }
 
 .admin-main-content {
-  padding: 16px;
-  max-width: 1500px;
+  padding: 32px 24px 48px 24px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -16,56 +18,67 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
 }
 
 .admin-title {
-  color: #EE626B;
-  font-size: 2rem;
-  font-weight: bold;
+  color: #1e40af;
+  font-size: 2.4rem;
+  font-weight: 800;
   margin: 0;
+  letter-spacing: 1.5px;
+  text-shadow: 0 2px 12px rgba(30,64,175,0.10);
+  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .admin-add-button {
-  background-color: #EE626B;
-  color: white;
+  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+  color: #fff;
   border: none;
-  padding: 8px 20px;
-  border-radius: 15px;
+  padding: 12px 32px;
+  border-radius: 999px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 1rem;
-  white-space: nowrap;
-  transition: background-color 0.3s;
+  gap: 12px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(37,99,235,0.13);
+  transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+  outline: none;
 }
-
-.admin-add-button:hover {
-  background-color: #f2858c;
+.admin-add-button:hover, .admin-add-button:focus {
+  background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+  box-shadow: 0 6px 24px rgba(37,99,235,0.18);
+  transform: scale(1.04);
 }
 
 .loading-spinner {
   display: flex;
   justify-content: center;
-  margin-top: 80px;
+  margin-top: 100px;
 }
 
 .spinner {
-  width: 60px;
-  height: 60px;
-  border: 5px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #EE626B;
+  width: 56px;
+  height: 56px;
+  border: 5px solid #e0e7ff;
+  border-top: 5px solid #2563eb;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.9s cubic-bezier(.4,2,.6,1) infinite;
+  background: transparent;
 }
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 36px;
+  margin-top: 24px;
 }
 
 .product-card-container {
@@ -77,32 +90,40 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #eeeeee;
-  border-radius: 20px;
-  box-shadow: none;
-  transition: transform 0.3s;
+  background: linear-gradient(135deg, #fff 60%, #e0e7ff 100%);
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(30,64,175,0.08);
+  transition: transform 0.22s cubic-bezier(.4,2,.6,1), box-shadow 0.22s cubic-bezier(.4,2,.6,1), border 0.18s;
   overflow: hidden;
+  border: 2.5px solid transparent;
+  min-height: 420px;
 }
-
 .product-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.025);
+  box-shadow: 0 16px 32px rgba(37,99,235,0.18);
+  border-color: #2563eb;
 }
 
 .product-image {
   width: 100%;
-  height: 200px;
+  height: 180px;
   object-fit: cover;
-  border-radius: 20px 20px 0 0;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  background: #e0e7ff;
 }
 
 .product-content {
-  padding: 16px;
-  flex-grow: 1;
+  padding: 22px 20px 0 20px;
+  flex: 1;
 }
 
 .product-name {
-  margin: 0 0 12px 0;
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+  letter-spacing: 0.5px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -113,81 +134,93 @@
 
 .category-chip {
   display: inline-block;
-  background-color: #0171f9;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 16px;
-  margin-right: 8px;
-  font-size: 0.875rem;
+  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.98rem;
+  border-radius: 999px;
+  padding: 4px 16px;
+  margin: 12px 0 0 0;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(30,64,175,0.10);
 }
 
 .stock-text {
-  color: #555;
-  margin-top: 8px;
-  margin-bottom: 0;
+  margin: 18px 0 0 0;
+  color: #64748b;
+  font-weight: 500;
+  font-size: 1.05rem;
 }
 
 .product-actions {
-  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 18px 20px 20px 20px;
 }
 
 .delete-button {
-  width: 100%;
-  background-color: #EE626B;
-  color: white;
-  border-radius: 15px;
-  padding: 8px 16px;
+  background: linear-gradient(90deg, #f43f5e 0%, #be123c 100%);
+  color: #fff;
   border: none;
-  cursor: pointer;
+  border-radius: 999px;
+  padding: 8px 22px 8px 14px;
+  font-weight: 600;
+  font-size: 1rem;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(244,63,94,0.10);
+  transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+  outline: none;
 }
-
-.delete-button:hover {
-  background-color: #f2858c;
+.delete-button:hover, .delete-button:focus {
+  background: linear-gradient(90deg, #be123c 0%, #f43f5e 100%);
+  box-shadow: 0 4px 18px rgba(244,63,94,0.18);
+  transform: scale(1.04);
 }
 
 /* Dialog Styles */
 .dialog-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30, 41, 59, 0.32);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(2px);
 }
 
 .dialog-container {
-  background-color: white;
-  border-radius: 8px;
-  border: 2px solid #0171f9;
-  box-shadow: 0 0 10px rgba(1, 113, 249, 0.2);
+  background: #fff;
+  border-radius: 18px;
+  border: none;
+  box-shadow: 0 8px 32px rgba(30,64,175,0.13);
   width: 100%;
-  max-width: 600px;
+  max-width: 480px;
   margin: 16px;
+  overflow: hidden;
+  animation: fadeIn 0.3s;
 }
 
 .dialog-title {
-  color: #0171f9;
+  color: #1e40af;
   text-align: center;
-  font-size: 1.5rem;
-  padding: 16px;
+  font-size: 1.45rem;
+  font-weight: 700;
+  padding: 24px 16px 8px 16px;
   margin: 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e0e7ff;
+  letter-spacing: 0.5px;
 }
 
 .dialog-content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px;
+  gap: 18px;
+  padding: 24px 24px 0 24px;
 }
 
 .form-group {
@@ -197,33 +230,46 @@
 .form-label {
   display: block;
   margin-bottom: 8px;
-  color: #555;
-  font-weight: 500;
+  color: #334155;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.2px;
 }
 
 .form-input {
   width: 100%;
-  padding: 12px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #e0e7ff;
   font-size: 1rem;
+  background: #f8fafc;
+  transition: border 0.18s;
+  outline: none;
+}
+.form-input:focus {
+  border-color: #2563eb;
+  background: #fff;
 }
 
 .upload-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
-  border: 1px solid #0171f9;
-  border-radius: 4px;
-  color: #0171f9;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 1.5px solid #2563eb;
+  border-radius: 8px;
+  color: #2563eb;
+  background: #f8fafc;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.18s, border 0.18s, color 0.18s;
   justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
 }
-
-.upload-button:hover {
-  background-color: rgba(1, 113, 249, 0.1);
+.upload-button:hover, .upload-button:focus {
+  background: #e0e7ff;
+  border-color: #1e40af;
+  color: #1e40af;
 }
 
 .file-input {
@@ -242,10 +288,11 @@
   max-height: 200px;
   object-fit: contain;
   border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(30,64,175,0.10);
 }
 
 .dialog-actions {
-  padding: 0 20px 20px;
+  padding: 0 24px 24px 24px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -253,49 +300,64 @@
 }
 
 .cancel-button {
-  color: #555;
+  color: #64748b;
   background: none;
   border: none;
   cursor: pointer;
   padding: 8px 16px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.18s;
   order: 2;
+}
+.cancel-button:hover, .cancel-button:focus {
+  color: #1e40af;
 }
 
 .submit-button {
-  background-color: #0171f9;
-  color: white;
-  border-radius: 15px;
-  padding: 8px 24px;
+  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+  color: #fff;
+  border-radius: 999px;
+  padding: 10px 32px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+  font-weight: 700;
+  font-size: 1.08rem;
   order: 1;
   margin-bottom: 8px;
   width: 100%;
+  box-shadow: 0 2px 8px rgba(30,64,175,0.10);
+  outline: none;
 }
-
-.submit-button:hover {
-  background-color: #2386fe;
+.submit-button:hover, .submit-button:focus {
+  background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+  box-shadow: 0 4px 18px rgba(37,99,235,0.18);
+  transform: scale(1.04);
 }
 
 /* Snackbar Styles */
 .snackbar {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  border-radius: 15px;
+  top: 32px;
+  right: 32px;
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+  padding: 18px 32px;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   z-index: 1000;
-  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 24px rgba(34,197,94,0.13);
+  font-weight: 600;
+  font-size: 1.08rem;
   animation: fadeIn 0.3s;
+  min-width: 220px;
+  gap: 12px;
 }
-
 .snackbar.error {
-  background-color: #f44336;
+  background: linear-gradient(90deg, #f43f5e 0%, #be123c 100%);
+  box-shadow: 0 6px 24px rgba(244,63,94,0.13);
 }
 
 /* Animations */

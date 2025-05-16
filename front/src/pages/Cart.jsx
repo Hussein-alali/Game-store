@@ -25,20 +25,7 @@ const Cart = () => {
         <hr />
         <CartTable />
         <hr />
-        <div >
-             <Link to="/Checkout" style={{ 
-              color: 'white' ,
-              float:'right',
-              backgroundColor:'#007BFF',
-              padding:15,
-              fontSize:18,
-              marginTop:20,
-              cursor:'pointer',
-              border:'none',
-              textDecoration:'none'
-              
-              }} >Proceed To Checkout</Link>
-        </div>
+      
       </div>
       <Footer />
     </>

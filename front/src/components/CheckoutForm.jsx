@@ -1,41 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../config/api';
 
 const CheckoutForm = () => {
-  return (
-    <div className="checkout-left">
-      <h2>Contact</h2>
-      <input type="email" placeholder="Email or mobile phone number" required />
-      <label><input type="checkbox" /> Email me with news and offers</label>
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { cartItems, total } = location.state || { cartItems: [], total: 0 };
+  
+  const [formData, setFormData] = useState({
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+    name: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-      <h2>Delivery</h2>
-      <select>
-        <option>Country/Region</option>
-        <option selected>Egypt</option>
-      </select>
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-      <div className="input-group">
-        <input type="text" placeholder="First name" />
-        <input type="text" placeholder="Last name" />
-      </div>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-      <input type="text" placeholder="Address" />
-      <input type="text" placeholder="Apartment, suite, etc." />
+    try {
+      // Create order
+      const orderResponse = await api.post('/orders', {
+        items: cartItems.map(item => ({
+          gameId: item.game._id,
+          quantity: item.quantity,
+          price: item.game.price
+        })),
+        total: total,
+        paymentDetails: {
+          ...formData,
+          cvv: undefined // Don't send CVV to backend
+        }
+      });
 
-      <div className="input-group">
-        <input type="text" placeholder="City" />
-        <select>
-          <option selected>Cairo</option>
-          <option>Giza</option>
-          <option>New Cairo</option>
-          <option>Nasr City</option>
-        </select>
-        <input type="text" placeholder="Postal code (optional)" />
-      </div>
+      // Clear cart after successful order
+      await api.delete('/cart');
 
-      <input type="tel" placeholder="Phone" />
-      <label><input type="checkbox" /> Save this information for next time</label>
-    </div>
-  );
-};
+      // Navigate to order confirmation
+      navigate('/order-confirmation', { 
+        state: { 
+          orderId: orderResponse.data.orderId,
+          total: total
+        }
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to process order');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!cartItems.length) {
+    return <div>No items in cart</div>;
+  }
+
+  
+    };
 
 export default CheckoutForm;

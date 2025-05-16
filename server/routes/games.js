@@ -1,9 +1,43 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Game = require('../models/Game');
+const Cart = require('../models/Cart');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const router = express.Router();
+
+// Get trending games - Must be before parameterized routes
+router.get('/trending', async (req, res) => {
+  try {
+    // Get random games that are in stock
+    const trendingGames = await Game.aggregate([
+      // Match games that are in stock
+      { $match: { stock: { $gt: 0 } } },
+      // Get random games
+      { $sample: { size: 4 } },
+      // Project only the needed fields
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          platform: 1,
+          category: 1,
+          price: 1,
+          stock: 1,
+          coverImage: 1,
+          isNew: 1
+        }
+      }
+    ]);
+
+    res.json({
+      games: trendingGames
+    });
+  } catch (error) {
+    console.error('Error fetching trending games:', error);
+    res.status(500).json({ message: 'Failed to fetch trending games' });
+  }
+});
 
 // GET /games - Get paginated list of games
 router.get('/', async (req, res) => {
