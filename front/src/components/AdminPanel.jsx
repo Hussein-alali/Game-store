@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './AdminPanel.css';
+import api from '../config/api';
 
 const AdminPanel = () => {
   const [games, setGames] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [newGame, setNewGame] = useState({
-    name: '',
+    title: '',
+    platform: '',
     category: '',
-    quantity: '',
-    image: null,
-    preview: null
+    price: '',
+    stock: '',
+    coverImage: null,
+    preview: null,
+    isNew: true
   });
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
@@ -22,48 +26,58 @@ const AdminPanel = () => {
   const snackbarTimeoutRef = useRef(null);
 
   const categories = ['Action', 'Adventure', 'RPG', 'Strategy', 'Sports', 'Puzzle', 'Horror', 'Simulation'];
+  const platforms = ['PC', 'PlayStation', 'Xbox', 'Nintendo'];
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setGames([
-        { id: 1, name: 'Epic Adventure', category: 'Adventure', quantity: 10, preview: '/game-placeholder.jpg' },
-        { id: 2, name: 'Space Warriors', category: 'Action', quantity: 5, preview: '/game-placeholder.jpg' },
-        { id: 3, name: 'Football Pro', category: 'Sports', quantity: 8, preview: '/game-placeholder.jpg' },
-        { id: 4, name: 'Mystery Puzzle', category: 'Puzzle', quantity: 15, preview: '/game-placeholder.jpg' },
-        { id: 5, name: 'Zombie Survival', category: 'Horror', quantity: 7, preview: '/game-placeholder.jpg' },
-        { id: 6, name: 'City Builder', category: 'Simulation', quantity: 12, preview: '/game-placeholder.jpg' }
-      ]);
-      setLoading(false);
-    }, 1000);
+    fetchGames();
   }, []);
+
+  const fetchGames = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/games');
+      setGames(response.data.games);
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: 'Failed to load games',
+        severity: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Effect to auto-close snackbar for "Game deleted successfully" after 4 seconds
   useEffect(() => {
-    if (
-      snackbar.open &&
-      snackbar.message === 'Game deleted successfully'
-    ) {
-      // Clear any previous timeout
+    if (snackbar.open) {
       if (snackbarTimeoutRef.current) {
         clearTimeout(snackbarTimeoutRef.current);
       }
       snackbarTimeoutRef.current = setTimeout(() => {
         setSnackbar((prev) => ({ ...prev, open: false }));
       }, 4000);
-      // Cleanup on unmount or snackbar change
       return () => {
         if (snackbarTimeoutRef.current) {
           clearTimeout(snackbarTimeoutRef.current);
         }
       };
     }
-  }, [snackbar.open, snackbar.message]);
+  }, [snackbar.open]);
 
   const handleDialogOpen = () => setOpenDialog(true);
   const handleDialogClose = () => {
     setOpenDialog(false);
-    setNewGame({ name: '', category: '', quantity: '', image: null, preview: null });
+    setNewGame({
+      title: '',
+      platform: '',
+      category: '',
+      price: '',
+      stock: '',
+      coverImage: null,
+      preview: null,
+      isNew: true
+    });
   };
 
   const handleImageChange = (e) => {
@@ -71,27 +85,75 @@ const AdminPanel = () => {
     if (file) {
       setNewGame({
         ...newGame,
-        image: file,
+        coverImage: file,
         preview: URL.createObjectURL(file)
       });
     }
   };
 
-  const handleAddGame = () => {
-    const { name, category, quantity, image, preview } = newGame;
-    if (!name || !category || !quantity || !image) {
-      setSnackbar({ open: true, message: 'Please fill all fields and add an image', severity: 'error' });
-      return;
+  const handleAddGame = async () => {
+    try {
+      const { title, platform, category, price, stock, coverImage } = newGame;
+      if (!title || !platform || !category || !price || !stock || !coverImage) {
+        setSnackbar({
+          open: true,
+          message: 'Please fill all fields and add an image',
+          severity: 'error'
+        });
+        return;
+      }
+
+      // Create form data with all game information
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('platform', platform);
+      formData.append('category', category);
+      formData.append('price', parseFloat(price));
+      formData.append('stock', parseInt(stock));
+      formData.append('coverImage', coverImage);
+      formData.append('isNew', true);
+
+      // Send everything in one request
+      const response = await api.post('/games', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      setGames([...games, response.data]);
+      setSnackbar({
+        open: true,
+        message: 'Game added successfully',
+        severity: 'success'
+      });
+      handleDialogClose();
+      fetchGames(); // Refresh the games list
+    } catch (error) {
+      console.error('Error adding game:', error);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || 'Failed to add game',
+        severity: 'error'
+      });
     }
-    const newId = games.length > 0 ? Math.max(...games.map(g => g.id)) + 1 : 1;
-    setGames([...games, { id: newId, name, category, quantity, preview }]);
-    setSnackbar({ open: true, message: 'Game added successfully', severity: 'success' });
-    handleDialogClose();
   };
 
-  const handleDelete = (id) => {
-    setGames(games.filter(game => game.id !== id));
-    setSnackbar({ open: true, message: 'Game deleted successfully', severity: 'success' });
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/games/${id}`);
+      setGames(games.filter(game => game._id !== id));
+      setSnackbar({
+        open: true,
+        message: 'Game deleted successfully',
+        severity: 'success'
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || 'Failed to delete game',
+        severity: 'error'
+      });
+    }
   };
 
   // Custom SVG Icons
@@ -137,28 +199,34 @@ const AdminPanel = () => {
         ) : (
           <div className="products-grid">
             {games.map((game) => (
-              <div key={game.id} className="product-card-container">
+              <div key={game._id} className="product-card-container">
                 <div className="product-card">
                   <img
-                    src={game.preview || '/game-placeholder.jpg'}
-                    alt={game.name}
+                    src={game.coverImage}
+                    alt={game.title}
                     className="product-image"
                   />
                   <div className="product-content">
                     <h3 className="product-name">
-                      {game.name}
+                      {game.title}
                     </h3>
+                    <span className="platform-chip">
+                      {game.platform}
+                    </span>
                     <span className="category-chip">
                       {game.category}
                     </span>
                     <p className="stock-text">
-                      Stock: {game.quantity}
+                      Stock: {game.stock}
+                    </p>
+                    <p className="price-text">
+                      ${game.price}
                     </p>
                   </div>
                   <div className="product-actions">
                     <button
                       className="delete-button"
-                      onClick={() => handleDelete(game.id)}
+                      onClick={() => handleDelete(game._id)}
                     >
                       <DeleteIcon />
                       Delete
@@ -181,16 +249,32 @@ const AdminPanel = () => {
             <div className="dialog-content">
               <div className="form-group">
                 <label className="form-label">
-                  Product Name
+                  Game Title
                 </label>
                 <input
                   type="text"
                   className="form-input"
-                  value={newGame.name}
-                  onChange={(e) => setNewGame({ ...newGame, name: e.target.value })}
+                  value={newGame.title}
+                  onChange={(e) => setNewGame({ ...newGame, title: e.target.value })}
                 />
               </div>
               
+              <div className="form-group">
+                <label className="form-label">
+                  Platform
+                </label>
+                <select
+                  className="form-input"
+                  value={newGame.platform}
+                  onChange={(e) => setNewGame({ ...newGame, platform: e.target.value })}
+                >
+                  <option value="">Select a platform</option>
+                  {platforms.map((platform) => (
+                    <option key={platform} value={platform}>{platform}</option>
+                  ))}
+                </select>
+              </div>
+
               <div className="form-group">
                 <label className="form-label">
                   Category
@@ -209,20 +293,33 @@ const AdminPanel = () => {
               
               <div className="form-group">
                 <label className="form-label">
-                  Quantity
+                  Price ($)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  className="form-input"
+                  value={newGame.price}
+                  onChange={(e) => setNewGame({ ...newGame, price: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Stock
                 </label>
                 <input
                   type="number"
                   className="form-input"
-                  value={newGame.quantity}
-                  onChange={(e) => setNewGame({ ...newGame, quantity: e.target.value })}
+                  value={newGame.stock}
+                  onChange={(e) => setNewGame({ ...newGame, stock: e.target.value })}
                 />
               </div>
               
               <label className="form-group">
                 <div className="upload-button">
                   <UploadIcon />
-                  Upload Image
+                  Upload Cover Image
                 </div>
                 <input
                   type="file"

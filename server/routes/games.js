@@ -1,10 +1,26 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
+const multer = require('multer');
 const Game = require('../models/Game');
 const Cart = require('../models/Cart');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const router = express.Router();
+
+// Configure multer for memory storage
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only images are allowed'));
+    }
+  }
+});
 
 // Get trending games - Must be before parameterized routes
 router.get('/trending', async (req, res) => {
@@ -24,7 +40,6 @@ router.get('/trending', async (req, res) => {
           category: 1,
           price: 1,
           stock: 1,
-          coverImage: 1,
           isNew: 1
         }
       }
@@ -36,6 +51,21 @@ router.get('/trending', async (req, res) => {
   } catch (error) {
     console.error('Error fetching trending games:', error);
     res.status(500).json({ message: 'Failed to fetch trending games' });
+  }
+});
+
+// GET /games/:id/image - Get game image
+router.get('/:id/image', async (req, res) => {
+  try {
+    const game = await Game.findById(req.params.id);
+    if (!game || !game.coverImage) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+
+    res.set('Content-Type', game.coverImage.contentType);
+    res.send(game.coverImage.data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
@@ -83,30 +113,33 @@ const gameValidationRules = [
     .isFloat({ gt: 0 }).withMessage('Price must be greater than 0'),
   body('platform')
     .isIn(['PC', 'PlayStation', 'Xbox', 'Nintendo']).withMessage('Invalid platform'),
-  body('coverImage')
-    .isURL().withMessage('Cover image must be a valid URL'),
+  body('stock')
+    .isInt({ gt: 0 }).withMessage('Stock must be greater than 0'),
+  body('category')
+    .notEmpty().withMessage('Category is required'),
   body('description')
     .optional()
     .trim()
     .isLength({ max: 1000 }).withMessage('Description too long')
 ];
 
-// Validate middleware
-const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
-
 // POST /games - Create new game (Admin only)
-router.post('/', auth, admin, gameValidationRules, validate, async (req, res) => {
+router.post('/', auth, admin, upload.single('coverImage'), gameValidationRules, validate, async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Cover image is required' });
+    }
+
     const game = new Game({
       ...req.body,
-      addedBy: req.userId // Track which admin added the game
+      coverImage: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+        fileName: req.file.originalname
+      },
+      addedBy: req.userId
     });
+
     const savedGame = await game.save();
     res.status(201).json(savedGame);
   } catch (err) {
@@ -115,13 +148,24 @@ router.post('/', auth, admin, gameValidationRules, validate, async (req, res) =>
 });
 
 // PUT /games/:id - Update game (Admin only)
-router.put('/:id', auth, admin, gameValidationRules, validate, async (req, res) => {
+router.put('/:id', auth, admin, upload.single('coverImage'), gameValidationRules, validate, async (req, res) => {
   try {
+    const updateData = { ...req.body };
+    
+    if (req.file) {
+      updateData.coverImage = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+        fileName: req.file.originalname
+      };
+    }
+
     const updatedGame = await Game.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
+
     if (!updatedGame) {
       return res.status(404).json({ message: 'Game not found' });
     }
@@ -143,5 +187,14 @@ router.delete('/:id', auth, admin, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Validate middleware
+const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
 
 module.exports = router;
