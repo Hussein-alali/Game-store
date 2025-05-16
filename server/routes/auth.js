@@ -1,8 +1,9 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');  // استيراد bcrypt
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
+
 const router = express.Router();
 
 // Validation middlewares
@@ -17,7 +18,7 @@ const validateLogin = [
   body('password').exists().withMessage('Password is required'),
 ];
 
-// User registration
+// 🔐 POST /api/register
 router.post('/register', validateRegister, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -37,8 +38,8 @@ router.post('/register', validateRegister, async (req, res) => {
   }
 });
 
-// User login
-router.post('/login', validateLogin, async (req, res) => {
+// 🔓 POST /api/signin
+router.post('/signin', validateLogin, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -50,7 +51,12 @@ router.post('/login', validateLogin, async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { userId: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
     res.json({ token });
   } catch (err) {
     res.status(500).json({ message: err.message });

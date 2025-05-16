@@ -17,9 +17,30 @@ const SignIn = ({ setIsLoggedIn }) => {
       }
       return errors;
     },
-    onSubmit: (values) => {
-      setIsLoggedIn(true);
-      navigate('/');
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
+      try {
+        const response = await fetch('http://localhost:5000/api/signin', {  // عدل الرابط حسب السيرفر عندك
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          // عرض رسالة خطأ من السيرفر
+          setErrors({ apiError: data.message || 'Login failed' });
+        } else {
+          // حفظ التوكن
+          localStorage.setItem('token', data.token);
+          setIsLoggedIn(true);
+          navigate('/');
+        }
+      } catch (error) {
+        setErrors({ apiError: 'Network error, please try again.' });
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
@@ -49,7 +70,15 @@ const SignIn = ({ setIsLoggedIn }) => {
           <div style={{ color: 'red', fontSize: '12px' }}>{formik.errors.password}</div>
         )}
 
-        <button type="submit">Sign In</button>
+        {formik.errors.apiError && (
+          <div style={{ color: 'red', fontSize: '12px', marginTop: '5px' }}>
+            {formik.errors.apiError}
+          </div>
+        )}
+
+        <button type="submit" disabled={formik.isSubmitting}>
+          {formik.isSubmitting ? 'Signing in...' : 'Sign In'}
+        </button>
 
         <p style={{ marginTop: '10px', textAlign: 'center' }}>
           Don’t have an account?{' '}

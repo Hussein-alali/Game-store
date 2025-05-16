@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+
 const UserSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isAdmin: { type: Boolean, default: false }
+  age: { type: Number, required: true },
+  gender: { type: String, required: true },
+  country: { type: String, required: true },
 });
+
 
 // Hash password before saving
 UserSchema.pre('save', async function (next) {

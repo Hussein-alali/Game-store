@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 
-const Register = ({ setIsLoggedIn }) => {
+const Register = () => {
   const navigate = useNavigate();
+  const [serverError, setServerError] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -26,9 +27,36 @@ const Register = ({ setIsLoggedIn }) => {
       }
       return errors;
     },
-    onSubmit: (values) => {
-      setIsLoggedIn(true);
-      navigate('/');
+    onSubmit: async (values, { setSubmitting }) => {
+      setServerError(null);
+      try {
+        const response = await fetch('http://localhost:5000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: values.username,
+            email: values.email,
+            password: values.password,
+            // يمكن ترسل بقية البيانات إذا أردت تخزينها في السيرفر
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setServerError(data.message || 'Registration failed');
+          setSubmitting(false);
+          return;
+        }
+
+        // التسجيل ناجح
+        alert('Registration successful! Please sign in.');
+        setSubmitting(false);
+        navigate('/signin'); // توجه لصفحة تسجيل الدخول
+      } catch (error) {
+        setServerError('Server error. Please try again later.');
+        setSubmitting(false);
+      }
     },
   });
 
@@ -110,7 +138,13 @@ const Register = ({ setIsLoggedIn }) => {
           value={formik.values.country}
         />
 
-        <button type="submit">Register</button>
+        <button type="submit" disabled={formik.isSubmitting}>
+          {formik.isSubmitting ? 'Registering...' : 'Register'}
+        </button>
+
+        {serverError && (
+          <div style={{ color: 'red', marginTop: '10px' }}>{serverError}</div>
+        )}
 
         <p style={{ marginTop: '10px', textAlign: 'center' }}>
           Already have an account?{' '}
