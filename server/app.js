@@ -4,17 +4,17 @@ const connectDB = require('./db/connect');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-// Initialize Express
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json()); // Parse JSON bodies
+// السماح للفرونت إند بالوصول (React على بورت 3000)
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 
-// Database connection
+app.use(express.json());
+
 connectDB();
 
-// DB status endpoint
 app.get('/api/dbstatus', (req, res) => {
   res.json({
     status: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
@@ -23,19 +23,20 @@ app.get('/api/dbstatus', (req, res) => {
   });
 });
 
-// Error handler middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something broke!' });
-});
-
-// Routes
+// ربط الراوترات
 app.use('/api/games', require('./routes/games'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/admin', require('./routes/admin'));
 
-// Start server
+// ميدل وير للأخطاء
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something broke!' });
+});
+
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
