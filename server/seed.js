@@ -46,10 +46,10 @@ async function seedDB() {
 
       // 🛒 اختيار ألعاب عشوائية للسلة (1 إلى 3)
       const cartItems = faker.helpers.shuffle(savedGames)
-        .slice(0, faker.datatype.int({ min: 1, max: 3 }))
+        .slice(0, faker.number.int({ min: 1, max: 3 }))
         .map(game => ({
           gameId: game._id,
-          quantity: faker.datatype.int({ min: 1, max: 2 })
+          quantity: faker.number.int({ min: 1, max: 2 })
         }));
 
       const cartTotal = cartItems.reduce((sum, item) => {
