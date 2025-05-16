@@ -123,6 +123,15 @@ const gameValidationRules = [
     .isLength({ max: 1000 }).withMessage('Description too long')
 ];
 
+// Validate middleware
+const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
+
 // POST /games - Create new game (Admin only)
 router.post('/', auth, admin, upload.single('coverImage'), gameValidationRules, validate, async (req, res) => {
   try {
@@ -187,14 +196,5 @@ router.delete('/:id', auth, admin, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-// Validate middleware
-const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
 
 module.exports = router;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import api from '../config/api';
+import Header from '../components/Header';
 
 // For navigation to /cart
 // Use the correct relative public path for images: "/images/logo.png"
@@ -11,6 +12,9 @@ const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return !!localStorage.getItem('token');
+  });
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -47,17 +51,23 @@ const ProductsPage = () => {
 
   if (loading) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
-        <div className="loading-spinner"></div>
-      </div>
+      <>
+        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
+          <div className="loading-spinner"></div>
+        </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div style={{ textAlign: "center", marginTop: 16 }}>
-        <p style={{ color: "red" }}>{error}</p>
-      </div>
+      <>
+        <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <div style={{ textAlign: "center", marginTop: 16 }}>
+          <p style={{ color: "red" }}>{error}</p>
+        </div>
+      </>
     );
   }
 
@@ -70,59 +80,7 @@ const ProductsPage = () => {
         color: "#222",
       }}
     >
-      {}
-      <div
-        style={{
-          width: "100%",
-          height: 100,
-          background: "#2563eb",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-        }}
-      >
-        {/* Cart Icon in the top right corner */}
-        <Link
-          to="/cart"
-          style={{
-            position: "absolute",
-            right: 32,
-            top: "50%",
-            transform: "translateY(-50%)",
-            textDecoration: "none",
-            zIndex: 10,
-            display: "flex",
-            alignItems: "center",
-            background: "rgba(255,255,255,0.12)",
-            borderRadius: "50%",
-            padding: 10,
-            transition: "background 0.18s",
-          }}
-          aria-label="Go to cart"
-          title="Go to cart"
-          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.22)"}
-          onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
-        >
-          {/* SVG Cart Icon */}
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ display: "block" }}
-          >
-            <circle cx="9" cy="21" r="1.5" />
-            <circle cx="19" cy="21" r="1.5" />
-            <path d="M5 6h2l1.68 9.39a2 2 0 0 0 2 1.61h6.72a2 2 0 0 0 2-1.61L21 8H7" />
-          </svg>
-        </Link>
-        {/* Empty: just blue rectangle */}
-      </div>
+      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <div
         style={{
           maxWidth: 1200,
