@@ -8,6 +8,7 @@ import Checkout from './pages/Checkout';
 import UserOrders from './pages/UserOrders';
 import Admin from './pages/AdminPage';
 import Products from './pages/ProductsPage';
+import OrderHistory from './components/OrderHistory';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -33,7 +34,7 @@ const App = () => {
       <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
-      <Route path="/UserOrders" element={<UserOrders />} />
+      <Route path="/orders" element={<OrderHistory />} />
     </Routes>
   );
 };

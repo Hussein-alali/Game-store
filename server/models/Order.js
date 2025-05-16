@@ -22,7 +22,10 @@ const OrderSchema = new mongoose.Schema({
       type: Number, 
       required: true,
       min: 0 
-    }
+    },
+    title: String,
+    platform: String,
+    coverImage: String
   }],
   total: { 
     type: Number, 
@@ -46,7 +49,33 @@ const OrderSchema = new mongoose.Schema({
       enum: ['pending', 'completed', 'failed'],
       default: 'pending'
     }
-  }
+  },
+  shippingAddress: {
+    street: String,
+    city: String,
+    state: String,
+    country: String,
+    zipCode: String
+  },
+  orderDate: {
+    type: Date,
+    default: Date.now
+  },
+  lastUpdated: {
+    type: Date,
+    default: Date.now
+  },
+  statusHistory: [{
+    status: {
+      type: String,
+      enum: ['pending', 'processing', 'completed', 'cancelled']
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    },
+    note: String
+  }]
 }, {
   timestamps: true
 });
@@ -59,10 +88,17 @@ OrderSchema.methods.calculateTotal = function() {
   return this.total;
 };
 
-// Pre-save middleware to calculate total
+// Pre-save middleware to calculate total and update lastUpdated and add to status history
 OrderSchema.pre('save', function(next) {
   if (this.isModified('items')) {
     this.calculateTotal();
+  }
+  if (this.isModified('status')) {
+    this.lastUpdated = new Date();
+    this.statusHistory.push({
+      status: this.status,
+      date: this.lastUpdated
+    });
   }
   next();
 });
