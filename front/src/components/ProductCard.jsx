@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import api from '../config/api';
 
+// Displays a single product card with add-to-cart functionality
 const ProductCard = ({ product }) => {
   const [adding, setAdding] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const isOutOfStock = product.stock <= 0;
 
+  // Add to cart handler
   const handleAddToCart = async () => {
     if (isOutOfStock || adding) return;
-    
     setAdding(true);
     try {
       const token = localStorage.getItem('token');
@@ -16,15 +17,12 @@ const ProductCard = ({ product }) => {
         window.location.href = '/signin';
         return;
       }
-
       await api.post('/cart/add', { 
         gameId: product._id,
         quantity: 1
       });
-
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
-      
       window.dispatchEvent(new CustomEvent('show-toast', {
         detail: {
           message: `Added "${product.title}" to cart!`,
@@ -50,14 +48,12 @@ const ProductCard = ({ product }) => {
           Added to Cart!
         </div>
       )}
-      
       <img 
         src={product.coverImage} 
         alt={product.title} 
         className="product-image" 
         loading="lazy"
       />
-      
       <div className="product-content">
         <div className="badge-container">
           {isOutOfStock && (
@@ -71,26 +67,21 @@ const ProductCard = ({ product }) => {
             </span>
           )}
         </div>
-
         <h3 className="product-name">{product.title}</h3>
-        
         <div className="platform-badge">
           <span className="platform-chip">
             {product.platform}
           </span>
         </div>
-
         <div className="product-card-simple-category-wrapper left-align">
           <span className="category-chip">
             {product.category || 'Game'}
           </span>
         </div>
-
         <p className="stock-text">
           {isOutOfStock ? 'Currently unavailable' : `${product.stock} in stock`}
         </p>
       </div>
-
       <div className="product-actions">
         <div className="price-and-cart-row">
           <span className="price-text">${product.price.toFixed(2)}</span>
@@ -112,12 +103,11 @@ const ProductCard = ({ product }) => {
           </button>
         </div>
       </div>
-
+      {/* Inline styles */}
       <style jsx>{`
         .platform-badge {
           margin: 8px 0;
         }
-
         .platform-chip {
           display: inline-block;
           background: linear-gradient(90deg, #0606dc 0%, #1e40af 100%);
@@ -128,20 +118,17 @@ const ProductCard = ({ product }) => {
           font-weight: 600;
           box-shadow: 0 2px 6px rgba(6,6,220,0.13);
         }
-
         .price-and-cart-row {
           display: flex;
           align-items: center;
           justify-content: flex-start;
           gap: 16px;
         }
-
         .price-text {
           font-size: 1.1rem;
           font-weight: 700;
           color: #222;
         }
-
         .add-to-cart-button {
           display: inline-flex;
           align-items: center;
@@ -158,16 +145,13 @@ const ProductCard = ({ product }) => {
           transition: background 0.2s ease;
           min-width: 120px;
         }
-
         .add-to-cart-button:hover:not(:disabled) {
           background: #c62828;
         }
-
         .add-to-cart-button:disabled {
           background: #bdbdbd;
           cursor: not-allowed;
         }
-
         .spinner {
           width: 16px;
           height: 16px;
@@ -176,7 +160,6 @@ const ProductCard = ({ product }) => {
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
-
         .add-to-cart-success-message {
           position: absolute;
           top: 12px;
@@ -191,7 +174,6 @@ const ProductCard = ({ product }) => {
           z-index: 10;
           animation: fadeInOutSuccess 3s forwards;
         }
-
         @keyframes fadeInOutSuccess {
           0% {
             opacity: 0;
@@ -211,7 +193,6 @@ const ProductCard = ({ product }) => {
             pointer-events: none;
           }
         }
-
         @keyframes spin {
           to { transform: rotate(360deg); }
         }

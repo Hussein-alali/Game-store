@@ -1,5 +1,6 @@
 /* AdminPanel.css - Modern, Professional Redesign */
 
+/* Main container for the admin panel page */
 .admin-panel-container {
   margin: 0;
   font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
@@ -8,12 +9,14 @@
   color: #1e293b;
 }
 
+/* Main content area, centers and limits width */
 .admin-main-content {
   padding: 32px 24px 48px 24px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
+/* Header section: title and add button */
 .admin-header-container {
   display: flex;
   justify-content: space-between;
@@ -23,6 +26,7 @@
   gap: 20px;
 }
 
+/* Admin panel title styling with gradient text */
 .admin-title {
   color: #1e40af;
   font-size: 2.4rem;
@@ -36,6 +40,7 @@
   background-clip: text;
 }
 
+/* Button for adding new products */
 .admin-add-button {
   background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
   color: #fff;
@@ -52,18 +57,21 @@
   transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
   outline: none;
 }
+/* Add button hover/focus effect */
 .admin-add-button:hover, .admin-add-button:focus {
   background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
   box-shadow: 0 6px 24px rgba(37,99,235,0.18);
   transform: scale(1.04);
 }
 
+/* Spinner container for loading state */
 .loading-spinner {
   display: flex;
   justify-content: center;
   margin-top: 100px;
 }
 
+/* Circular loading spinner */
 .spinner {
   width: 56px;
   height: 56px;
@@ -74,6 +82,7 @@
   background: transparent;
 }
 
+/* Grid layout for product cards */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -81,11 +90,13 @@
   margin-top: 24px;
 }
 
+/* Container for each product card */
 .product-card-container {
   display: flex;
   flex-direction: column;
 }
 
+/* Product card styling */
 .product-card {
   flex: 1;
   display: flex;
@@ -98,12 +109,14 @@
   border: 2.5px solid transparent;
   min-height: 420px;
 }
+/* Product card hover effect */
 .product-card:hover {
   transform: translateY(-8px) scale(1.025);
   box-shadow: 0 16px 32px rgba(37,99,235,0.18);
   border-color: #2563eb;
 }
 
+/* Product image at the top of the card */
 .product-image {
   width: 100%;
   height: 180px;
@@ -113,11 +126,13 @@
   background: #e0e7ff;
 }
 
+/* Content area inside product card */
 .product-content {
   padding: 22px 20px 0 20px;
   flex: 1;
 }
 
+/* Product name styling, clamps to 2 lines */
 .product-name {
   font-size: 1.25rem;
   font-weight: 700;
@@ -132,6 +147,7 @@
   min-height: 3em;
 }
 
+/* Category label for each product */
 .category-chip {
   display: inline-block;
   background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
@@ -145,6 +161,7 @@
   box-shadow: 0 2px 8px rgba(30,64,175,0.10);
 }
 
+/* Stock information text */
 .stock-text {
   margin: 18px 0 0 0;
   color: #64748b;
@@ -152,6 +169,7 @@
   font-size: 1.05rem;
 }
 
+/* Action buttons (edit/delete) for each product */
 .product-actions {
   display: flex;
   justify-content: flex-end;
@@ -159,6 +177,7 @@
   padding: 18px 20px 20px 20px;
 }
 
+/* Delete button for product card */
 .delete-button {
   background: linear-gradient(90deg, #f43f5e 0%, #be123c 100%);
   color: #fff;
@@ -175,13 +194,14 @@
   transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
   outline: none;
 }
+/* Delete button hover/focus effect */
 .delete-button:hover, .delete-button:focus {
   background: linear-gradient(90deg, #be123c 0%, #f43f5e 100%);
   box-shadow: 0 4px 18px rgba(244,63,94,0.18);
   transform: scale(1.04);
 }
 
-/* Dialog Styles */
+/* Dialog overlay for modals */
 .dialog-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -193,6 +213,7 @@
   backdrop-filter: blur(2px);
 }
 
+/* Dialog/modal container */
 .dialog-container {
   background: #fff;
   border-radius: 18px;
@@ -205,6 +226,7 @@
   animation: fadeIn 0.3s;
 }
 
+/* Dialog/modal title */
 .dialog-title {
   color: #1e40af;
   text-align: center;
@@ -216,6 +238,7 @@
   letter-spacing: 0.5px;
 }
 
+/* Content area inside dialog/modal */
 .dialog-content {
   display: flex;
   flex-direction: column;
@@ -223,10 +246,12 @@
   padding: 24px 24px 0 24px;
 }
 
+/* Grouping for form fields */
 .form-group {
   margin-bottom: 8px;
 }
 
+/* Label for form fields */
 .form-label {
   display: block;
   margin-bottom: 8px;
@@ -236,6 +261,7 @@
   letter-spacing: 0.2px;
 }
 
+/* Input fields in forms */
 .form-input {
   width: 100%;
   padding: 12px 14px;
@@ -246,11 +272,13 @@
   transition: border 0.18s;
   outline: none;
 }
+/* Input focus effect */
 .form-input:focus {
   border-color: #2563eb;
   background: #fff;
 }
 
+/* Button for uploading images/files */
 .upload-button {
   display: flex;
   align-items: center;
@@ -266,16 +294,19 @@
   font-weight: 600;
   font-size: 1rem;
 }
+/* Upload button hover/focus effect */
 .upload-button:hover, .upload-button:focus {
   background: #e0e7ff;
   border-color: #1e40af;
   color: #1e40af;
 }
 
+/* Hide the native file input */
 .file-input {
   display: none;
 }
 
+/* Container for image preview in dialog */
 .image-preview-container {
   margin-top: 16px;
   text-align: center;
@@ -283,6 +314,7 @@
   overflow: hidden;
 }
 
+/* Preview image styling */
 .image-preview {
   max-width: 100%;
   max-height: 200px;
@@ -291,6 +323,7 @@
   box-shadow: 0 2px 8px rgba(30,64,175,0.10);
 }
 
+/* Actions area in dialog (submit/cancel) */
 .dialog-actions {
   padding: 0 24px 24px 24px;
   display: flex;
@@ -299,6 +332,7 @@
   gap: 16px;
 }
 
+/* Cancel button in dialog */
 .cancel-button {
   color: #64748b;
   background: none;
@@ -310,10 +344,12 @@
   transition: color 0.18s;
   order: 2;
 }
+/* Cancel button hover/focus effect */
 .cancel-button:hover, .cancel-button:focus {
   color: #1e40af;
 }
 
+/* Submit button in dialog */
 .submit-button {
   background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
   color: #fff;
@@ -330,13 +366,14 @@
   box-shadow: 0 2px 8px rgba(30,64,175,0.10);
   outline: none;
 }
+/* Submit button hover/focus effect */
 .submit-button:hover, .submit-button:focus {
   background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
   box-shadow: 0 4px 18px rgba(37,99,235,0.18);
   transform: scale(1.04);
 }
 
-/* Snackbar Styles */
+/* Snackbar Styles for notifications */
 .snackbar {
   position: fixed;
   top: 32px;
@@ -355,12 +392,13 @@
   min-width: 220px;
   gap: 12px;
 }
+/* Error state for snackbar */
 .snackbar.error {
   background: linear-gradient(90deg, #f43f5e 0%, #be123c 100%);
   box-shadow: 0 6px 24px rgba(244,63,94,0.13);
 }
 
-/* Animations */
+/* Animations for spinner and fade-in */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }

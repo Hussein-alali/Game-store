@@ -2,36 +2,45 @@ import React, { useState, useEffect, useRef } from 'react';
 import './AdminPanel.css';
 import api from '../config/api';
 
+// Main admin panel component for managing products/games
 const AdminPanel = () => {
+  // State for the list of games/products
   const [games, setGames] = useState([]);
+  // Controls visibility of the "Add Product" dialog
   const [openDialog, setOpenDialog] = useState(false);
+  // State for the new game being added
   const [newGame, setNewGame] = useState({
     title: '',
     platform: '',
     category: '',
     price: '',
     stock: '',
-    coverImage: null,
-    preview: null,
+    coverImage: null, // File object for image upload
+    preview: null,    // Local preview URL for the image
     isNew: true
   });
+  // Loading state for async operations (fetching, etc.)
   const [loading, setLoading] = useState(false);
+  // Snackbar state for showing feedback messages
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
-    severity: 'success'
+    severity: 'success' // 'success' or 'error'
   });
 
-  // Ref to store the timeout id for snackbar
+  // Ref to keep track of snackbar timeout (for auto-close)
   const snackbarTimeoutRef = useRef(null);
 
+  // Available categories and platforms for dropdowns
   const categories = ['Action', 'Adventure', 'RPG', 'Strategy', 'Sports', 'Puzzle', 'Horror', 'Simulation'];
   const platforms = ['PC', 'PlayStation', 'Xbox', 'Nintendo'];
 
+  // Fetch games on component mount
   useEffect(() => {
     fetchGames();
   }, []);
 
+  // Fetch all games from the backend API
   const fetchGames = async () => {
     try {
       setLoading(true);
@@ -48,15 +57,17 @@ const AdminPanel = () => {
     }
   };
 
-  // Effect to auto-close snackbar for "Game deleted successfully" after 4 seconds
+  // Auto-close the snackbar after 4 seconds when open
   useEffect(() => {
     if (snackbar.open) {
+      // Clear any previous timeout to avoid multiple timers
       if (snackbarTimeoutRef.current) {
         clearTimeout(snackbarTimeoutRef.current);
       }
       snackbarTimeoutRef.current = setTimeout(() => {
         setSnackbar((prev) => ({ ...prev, open: false }));
       }, 4000);
+      // Cleanup on unmount or when snackbar closes
       return () => {
         if (snackbarTimeoutRef.current) {
           clearTimeout(snackbarTimeoutRef.current);
@@ -65,7 +76,10 @@ const AdminPanel = () => {
     }
   }, [snackbar.open]);
 
+  // Open the "Add Product" dialog
   const handleDialogOpen = () => setOpenDialog(true);
+
+  // Close the dialog and reset the newGame state
   const handleDialogClose = () => {
     setOpenDialog(false);
     setNewGame({
@@ -80,20 +94,23 @@ const AdminPanel = () => {
     });
   };
 
+  // Handle image file selection for new product
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setNewGame({
         ...newGame,
         coverImage: file,
-        preview: URL.createObjectURL(file)
+        preview: URL.createObjectURL(file) // For local preview
       });
     }
   };
 
+  // Add a new game/product to the backend
   const handleAddGame = async () => {
     try {
       const { title, platform, category, price, stock, coverImage } = newGame;
+      // Validate all fields are filled
       if (!title || !platform || !category || !price || !stock || !coverImage) {
         setSnackbar({
           open: true,
@@ -103,7 +120,7 @@ const AdminPanel = () => {
         return;
       }
 
-      // Create form data with all game information
+      // Prepare form data for file upload
       const formData = new FormData();
       formData.append('title', title);
       formData.append('platform', platform);
@@ -113,13 +130,14 @@ const AdminPanel = () => {
       formData.append('coverImage', coverImage);
       formData.append('isNew', true);
 
-      // Send everything in one request
+      // Send POST request to add the new game
       const response = await api.post('/games', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
 
+      // Add the new game to the local state and show success message
       setGames([...games, response.data]);
       setSnackbar({
         open: true,
@@ -127,8 +145,9 @@ const AdminPanel = () => {
         severity: 'success'
       });
       handleDialogClose();
-      fetchGames(); // Refresh the games list
+      fetchGames(); // Refresh the games list from backend
     } catch (error) {
+      // Show error message if something goes wrong
       console.error('Error adding game:', error);
       setSnackbar({
         open: true,
@@ -138,9 +157,11 @@ const AdminPanel = () => {
     }
   };
 
+  // Delete a game/product by its id
   const handleDelete = async (id) => {
     try {
       await api.delete(`/games/${id}`);
+      // Remove the deleted game from local state
       setGames(games.filter(game => game._id !== id));
       setSnackbar({
         open: true,
@@ -156,19 +177,21 @@ const AdminPanel = () => {
     }
   };
 
-  // Custom SVG Icons
+  // SVG icon for the "Add" button
   const AddIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
       <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
     </svg>
   );
 
+  // SVG icon for the "Delete" button
   const DeleteIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
       <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
     </svg>
   );
 
+  // SVG icon for the "Upload" button
   const UploadIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="#0171f9">
       <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
@@ -177,12 +200,13 @@ const AdminPanel = () => {
 
   return (
     <div className="admin-panel-container">
-      {/* Main Content */}
+      {/* Main Content Area */}
       <div className="admin-main-content">
         <div className="admin-header-container">
           <h1 className="admin-title">
             Products - Admin view
           </h1>
+          {/* Button to open the "Add Product" dialog */}
           <button 
             className="admin-add-button"
             onClick={handleDialogOpen}
@@ -192,30 +216,36 @@ const AdminPanel = () => {
           </button>
         </div>
 
+        {/* Show loading spinner while fetching data */}
         {loading ? (
           <div className="loading-spinner">
             <div className="spinner" />
           </div>
         ) : (
+          // Product cards grid
           <div className="products-grid">
             {games.map((game) => (
               <div key={game._id} className="product-card-container">
                 <div className="product-card">
+                  {/* Game cover image */}
                   <img
                     src={game.coverImage}
                     alt={game.title}
                     className="product-image"
                   />
                   <div className="product-content">
+                    {/* Game title */}
                     <h3 className="product-name">
                       {game.title}
                     </h3>
+                    {/* Platform and category chips */}
                     <span className="platform-chip">
                       {game.platform}
                     </span>
                     <span className="category-chip">
                       {game.category}
                     </span>
+                    {/* Stock and price info */}
                     <p className="stock-text">
                       Stock: {game.stock}
                     </p>
@@ -223,6 +253,7 @@ const AdminPanel = () => {
                       ${game.price}
                     </p>
                   </div>
+                  {/* Delete button for each product */}
                   <div className="product-actions">
                     <button
                       className="delete-button"
@@ -239,7 +270,7 @@ const AdminPanel = () => {
         )}
       </div>
 
-      {/* Add Product Dialog */}
+      {/* Dialog for adding a new product */}
       {openDialog && (
         <div className="dialog-overlay">
           <div className="dialog-container">
@@ -247,6 +278,7 @@ const AdminPanel = () => {
               Add New Product
             </h2>
             <div className="dialog-content">
+              {/* Game Title Input */}
               <div className="form-group">
                 <label className="form-label">
                   Game Title
@@ -259,6 +291,7 @@ const AdminPanel = () => {
                 />
               </div>
               
+              {/* Platform Dropdown */}
               <div className="form-group">
                 <label className="form-label">
                   Platform
@@ -275,6 +308,7 @@ const AdminPanel = () => {
                 </select>
               </div>
 
+              {/* Category Dropdown */}
               <div className="form-group">
                 <label className="form-label">
                   Category
@@ -291,6 +325,7 @@ const AdminPanel = () => {
                 </select>
               </div>
               
+              {/* Price Input */}
               <div className="form-group">
                 <label className="form-label">
                   Price ($)
@@ -304,6 +339,7 @@ const AdminPanel = () => {
                 />
               </div>
 
+              {/* Stock Input */}
               <div className="form-group">
                 <label className="form-label">
                   Stock
@@ -316,6 +352,7 @@ const AdminPanel = () => {
                 />
               </div>
               
+              {/* Image Upload */}
               <label className="form-group">
                 <div className="upload-button">
                   <UploadIcon />
@@ -329,6 +366,7 @@ const AdminPanel = () => {
                 />
               </label>
               
+              {/* Show image preview if available */}
               {newGame.preview && (
                 <div className="image-preview-container">
                   <img 
@@ -339,6 +377,7 @@ const AdminPanel = () => {
                 </div>
               )}
             </div>
+            {/* Dialog action buttons */}
             <div className="dialog-actions">
               <button 
                 className="cancel-button"
@@ -357,7 +396,7 @@ const AdminPanel = () => {
         </div>
       )}
 
-      {/* Snackbar */}
+      {/* Snackbar for feedback messages */}
       {snackbar.open && (
         <div className={`snackbar ${snackbar.severity === 'error' ? 'error' : ''}`}>
           {snackbar.message}

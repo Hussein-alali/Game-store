@@ -4,17 +4,18 @@ import { Link } from 'react-router-dom';
 import api from '../config/api';
 import Header from '../components/Header';
 
-// For navigation to /cart
-// Use the correct relative public path for images: "/images/logo.png"
-// Do NOT use a Windows absolute path or "imeges" typo.
-
+// ProductsPage: Main page for displaying all products/games
 const ProductsPage = () => {
+  // State for product list
   const [products, setProducts] = useState([]);
+  // Loading state for async fetch
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Auth state: check if user is logged in (token in localStorage)
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return !!localStorage.getItem('token');
   });
+  // Pagination state (not yet used for UI, but ready for future)
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -22,15 +23,18 @@ const ProductsPage = () => {
     itemsPerPage: 10
   });
 
+  // Fetch products on mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
+        // API call to get all games
         const response = await api.get('/games');
         
         // Extract games array and pagination info from response
         const { games, pagination: paginationData } = response.data;
         
+        // Defensive: ensure games is an array
         if (!Array.isArray(games)) {
           throw new Error('Invalid data format received from server');
         }
@@ -49,6 +53,7 @@ const ProductsPage = () => {
     fetchProducts();
   }, []);
 
+  // Show loading spinner while fetching
   if (loading) {
     return (
       <>
@@ -60,6 +65,7 @@ const ProductsPage = () => {
     );
   }
 
+  // Show error message if fetch failed
   if (error) {
     return (
       <>
@@ -71,6 +77,7 @@ const ProductsPage = () => {
     );
   }
 
+  // Main product grid UI
   return (
     <div
       style={{
@@ -88,7 +95,7 @@ const ProductsPage = () => {
           padding: "0 20px 40px 20px",
         }}
       >
-        {/* "Our Collection" as a professional, non-button heading */}
+        {/* "Our Collection"*/}
         <div
           style={{
             display: "flex",
@@ -122,6 +129,7 @@ const ProductsPage = () => {
           </h2>
         </div>
 
+        {/* Product grid */}
         <div
           style={{
             display: "grid",
@@ -145,6 +153,7 @@ const ProductsPage = () => {
                 flexDirection: "column",
                 justifyContent: "stretch",
               }}
+              // Card hover: red border and shadow
               onMouseEnter={e => {
                 e.currentTarget.style.transform = "translateY(-10px) scale(1.025)";
                 e.currentTarget.style.boxShadow = "0 16px 32px rgba(220,38,38,0.18)";
@@ -156,6 +165,7 @@ const ProductsPage = () => {
                 e.currentTarget.style.borderColor = "transparent";
               }}
             >
+              {/* ProductCard: displays image, name, price, etc */}
               <ProductCard product={product} />
             </div>
           ))}
