@@ -33,7 +33,6 @@ const Headerforhome = ({ isLoggedIn, setIsLoggedIn }) => {
       <div className="header_link">
         <Link to="/">Home</Link>
         <Link to="/products">Products</Link>
-        <Link to="/cart">Cart</Link>
         {isAdmin && <Link to="/admin">Admin Panel</Link>}
         <Link to="/cart">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
