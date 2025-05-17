@@ -1,16 +1,18 @@
 import React from 'react';
+import api from '../config/api';
 // import './style.css';
 
 const GameCard = ({ game }) => {
-  const imageUrl = game.coverImage?.url || '/images/placeholder-game.jpg';
-  const imageAlt = game.coverImage?.alt || game.title;
+  // Get the correct image URL from the game's imageUrl virtual property
+  const imageUrl = game.imageUrl || '/images/placeholder-game.jpg';
+  const imageAlt = game.title || 'Game cover';
 
   return (
     <div className="card">
       <div className="image-container">
         <img 
           className="game-image" 
-          src={imageUrl} 
+          src={`${api.defaults.baseURL}${imageUrl}`} 
           alt={imageAlt}
           onError={(e) => {
             e.target.src = '/images/placeholder-game.jpg';

@@ -52,10 +52,14 @@ const ProductCard = ({ product }) => {
       )}
       
       <img 
-        src={product.coverImage} 
+        src={product.coverImage || '/images/placeholder-game.jpg'} 
         alt={product.title} 
         className="product-image" 
         loading="lazy"
+        onError={(e) => {
+          e.target.src = '/images/placeholder-game.jpg';
+          e.target.onerror = null;
+        }}
       />
       
       <div className="product-content">

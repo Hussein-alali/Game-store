@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from '../config/api';
 import Header from '../components/Header';
 
@@ -9,7 +9,9 @@ import Header from '../components/Header';
 // Do NOT use a Windows absolute path or "imeges" typo.
 
 const ProductsPage = () => {
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -36,6 +38,7 @@ const ProductsPage = () => {
         }
         
         setProducts(games);
+        setFilteredProducts(games);
         setPagination(paginationData);
         setError(null);
       } catch (err) {
@@ -48,6 +51,22 @@ const ProductsPage = () => {
 
     fetchProducts();
   }, []);
+
+  // Filter products when search query changes
+  useEffect(() => {
+    const searchQuery = searchParams.get('search');
+    if (searchQuery && products.length > 0) {
+      const query = searchQuery.toLowerCase();
+      const filtered = products.filter(product => 
+        product.title.toLowerCase().includes(query) ||
+        product.platform.toLowerCase().includes(query) ||
+        (product.category && product.category.toLowerCase().includes(query))
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [searchParams, products]);
 
   if (loading) {
     return (
@@ -88,7 +107,6 @@ const ProductsPage = () => {
           padding: "0 20px 40px 20px",
         }}
       >
-        {/* "Our Collection" as a professional, non-button heading */}
         <div
           style={{
             display: "flex",
@@ -118,48 +136,54 @@ const ProductsPage = () => {
               display: "inline-block",
             }}
           >
-            Our Collection
+            {searchParams.get('search') ? `Search Results for "${searchParams.get('search')}"` : 'Our Collection'}
           </h2>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 32,
-          }}
-        >
-          {products.map((product) => (
-            <div
-              key={product._id}
-              style={{
-                background: "linear-gradient(135deg, #fff 60%, #f1f5f9 100%)",
-                borderRadius: 18,
-                boxShadow: "0 6px 24px rgba(30,64,175,0.08)",
-                overflow: "hidden",
-                transition: "transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s cubic-bezier(.4,2,.6,1), border 0.2s",
-                cursor: "pointer",
-                border: "2.5px solid transparent",
-                minHeight: 420,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "stretch",
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = "translateY(-10px) scale(1.025)";
-                e.currentTarget.style.boxShadow = "0 16px 32px rgba(220,38,38,0.18)";
-                e.currentTarget.style.borderColor = "#dc2626";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = "translateY(0) scale(1)";
-                e.currentTarget.style.boxShadow = "0 6px 24px rgba(30,64,175,0.08)";
-                e.currentTarget.style.borderColor = "transparent";
-              }}
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+        {filteredProducts.length === 0 ? (
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <p>No products found matching your search criteria.</p>
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: 32,
+            }}
+          >
+            {filteredProducts.map((product) => (
+              <div
+                key={product._id}
+                style={{
+                  background: "linear-gradient(135deg, #fff 60%, #f1f5f9 100%)",
+                  borderRadius: 18,
+                  boxShadow: "0 6px 24px rgba(30,64,175,0.08)",
+                  overflow: "hidden",
+                  transition: "transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s cubic-bezier(.4,2,.6,1), border 0.2s",
+                  cursor: "pointer",
+                  border: "2.5px solid transparent",
+                  minHeight: 420,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "stretch",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = "translateY(-10px) scale(1.025)";
+                  e.currentTarget.style.boxShadow = "0 16px 32px rgba(220,38,38,0.18)";
+                  e.currentTarget.style.borderColor = "#dc2626";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = "translateY(0) scale(1)";
+                  e.currentTarget.style.boxShadow = "0 6px 24px rgba(30,64,175,0.08)";
+                  e.currentTarget.style.borderColor = "transparent";
+                }}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

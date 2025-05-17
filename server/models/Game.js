@@ -15,7 +15,9 @@ const GameSchema = new mongoose.Schema({
   isNew: { type: Boolean, default: false },
   releaseDate: { type: Date, default: Date.now }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 // Add a virtual property to generate image URL

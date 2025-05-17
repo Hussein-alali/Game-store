@@ -5,6 +5,7 @@ const Game = require('../models/Game');
 const Cart = require('../models/Cart');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
+const path = require('path');
 const router = express.Router();
 
 // Configure multer for memory storage
@@ -58,14 +59,15 @@ router.get('/trending', async (req, res) => {
 router.get('/:id/image', async (req, res) => {
   try {
     const game = await Game.findById(req.params.id);
-    if (!game || !game.coverImage) {
-      return res.status(404).json({ message: 'Image not found' });
+    if (!game || !game.coverImage || !game.coverImage.data) {
+      return res.status(404).sendFile(path.join(__dirname, '../public/images/placeholder-game.jpg'));
     }
 
     res.set('Content-Type', game.coverImage.contentType);
     res.send(game.coverImage.data);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error('Error fetching game image:', err);
+    res.status(500).json({ message: 'Failed to fetch game image' });
   }
 });
 
