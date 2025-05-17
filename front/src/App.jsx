@@ -9,6 +9,7 @@ import UserOrders from './pages/UserOrders';
 import Admin from './pages/AdminPage';
 import Products from './pages/ProductsPage';
 import OrderHistory from './components/OrderHistory';
+import Profile from './components/Profile';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -35,6 +36,7 @@ const App = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/orders" element={<OrderHistory />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 };

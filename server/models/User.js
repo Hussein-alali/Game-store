@@ -10,7 +10,8 @@ const UserSchema = new mongoose.Schema({
   age: { type: Number, required: true },
   gender: { type: String, required: true },
   country: { type: String, required: true },
-  isAdmin: { type: Boolean, default: false }
+  isAdmin: { type: Boolean, default: false },
+  profilePicture: { type: String, default: '/images/default-avatar.png' }
 }, {
   timestamps: true
 });

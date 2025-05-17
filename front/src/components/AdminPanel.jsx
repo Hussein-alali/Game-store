@@ -202,26 +202,24 @@ const AdminPanel = () => {
               <div key={game._id} className="product-card-container">
                 <div className="product-card">
                   <img
-                    src={game.coverImage}
+                    src={game.coverImage?.url || '/images/placeholder-game.jpg'}
                     alt={game.title}
                     className="product-image"
+                    onError={(e) => {
+                      e.target.src = '/images/placeholder-game.jpg';
+                      e.target.onerror = null;
+                    }}
                   />
                   <div className="product-content">
-                    <h3 className="product-name">
-                      {game.title}
-                    </h3>
-                    <span className="platform-chip">
-                      {game.platform}
-                    </span>
-                    <span className="category-chip">
-                      {game.category}
-                    </span>
+                    <h3 className="product-name">{game.title}</h3>
+                    <div className="badges">
+                      <span className="platform-chip">{game.platform}</span>
+                      <span className="category-chip">{game.category}</span>
+                    </div>
                     <p className="stock-text">
-                      Stock: {game.stock}
+                      {game.stock > 0 ? `${game.stock} in stock` : 'Out of stock'}
                     </p>
-                    <p className="price-text">
-                      ${game.price}
-                    </p>
+                    <p className="price-text">${game.price.toFixed(2)}</p>
                   </div>
                   <div className="product-actions">
                     <button

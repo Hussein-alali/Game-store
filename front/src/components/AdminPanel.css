@@ -76,14 +76,17 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 36px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
   margin-top: 24px;
+  padding: 0 12px;
 }
 
 .product-card-container {
   display: flex;
   flex-direction: column;
+  min-height: 100%;
+  transition: transform 0.3s ease-in-out;
 }
 
 .product-card {
@@ -93,29 +96,38 @@
   background: linear-gradient(135deg, #fff 60%, #e0e7ff 100%);
   border-radius: 18px;
   box-shadow: 0 6px 24px rgba(30,64,175,0.08);
-  transition: transform 0.22s cubic-bezier(.4,2,.6,1), box-shadow 0.22s cubic-bezier(.4,2,.6,1), border 0.18s;
+  transition: all 0.3s cubic-bezier(.4,2,.6,1);
   overflow: hidden;
   border: 2.5px solid transparent;
-  min-height: 420px;
+  height: 100%;
 }
+
 .product-card:hover {
-  transform: translateY(-8px) scale(1.025);
+  transform: translateY(-8px) scale(1.02);
   box-shadow: 0 16px 32px rgba(37,99,235,0.18);
   border-color: #2563eb;
 }
 
 .product-image {
   width: 100%;
-  height: 180px;
+  height: 200px;
   object-fit: cover;
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   background: #e0e7ff;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
 }
 
 .product-content {
-  padding: 22px 20px 0 20px;
+  padding: 22px 20px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .product-name {
@@ -132,53 +144,77 @@
   min-height: 3em;
 }
 
-.category-chip {
-  display: inline-block;
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.platform-chip, .category-chip {
+  display: inline-flex;
+  align-items: center;
   background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
   color: #fff;
   font-weight: 500;
   font-size: 0.98rem;
   border-radius: 999px;
-  padding: 4px 16px;
-  margin: 12px 0 0 0;
+  padding: 6px 16px;
   letter-spacing: 0.5px;
   box-shadow: 0 2px 8px rgba(30,64,175,0.10);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.platform-chip:hover, .category-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30,64,175,0.15);
 }
 
 .stock-text {
-  margin: 18px 0 0 0;
+  margin: 8px 0 0 0;
   color: #64748b;
   font-weight: 500;
   font-size: 1.05rem;
+}
+
+.price-text {
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 4px 0;
 }
 
 .product-actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 18px 20px 20px 20px;
+  padding: 16px 20px;
+  background: rgba(243, 244, 246, 0.5);
+  border-top: 1px solid rgba(30,64,175,0.1);
 }
 
 .delete-button {
-  background: linear-gradient(90deg, #f43f5e 0%, #be123c 100%);
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  padding: 8px 22px 8px 14px;
-  font-weight: 600;
-  font-size: 1rem;
   display: flex;
   align-items: center;
   gap: 8px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(244,63,94,0.10);
-  transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
-  outline: none;
+  transition: all 0.2s ease;
 }
-.delete-button:hover, .delete-button:focus {
-  background: linear-gradient(90deg, #be123c 0%, #f43f5e 100%);
-  box-shadow: 0 4px 18px rgba(244,63,94,0.18);
-  transform: scale(1.04);
+
+.delete-button:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.delete-button:active {
+  transform: translateY(0);
 }
 
 /* Dialog Styles */
@@ -368,4 +404,48 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 0 8px;
+  }
+
+  .product-content {
+    padding: 16px;
+  }
+
+  .product-name {
+    font-size: 1.1rem;
+  }
+
+  .badges {
+    gap: 6px;
+  }
+  
+  .platform-chip, .category-chip {
+    font-size: 0.9rem;
+    padding: 4px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .product-image {
+    height: 180px;
+  }
 }
