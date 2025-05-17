@@ -19,7 +19,7 @@ const SignIn = ({ setIsLoggedIn }) => {
     },
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        const response = await fetch('http://localhost:5000/api/signin', {  // عدل الرابط حسب السيرفر عندك
+        const response = await fetch('http://localhost:5000/api/signin', {  
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(values),
@@ -28,10 +28,10 @@ const SignIn = ({ setIsLoggedIn }) => {
         const data = await response.json();
 
         if (!response.ok) {
-          // عرض رسالة خطأ من السيرفر
+          
           setErrors({ apiError: data.message || 'Login failed' });
         } else {
-          // حفظ التوكن
+          
           localStorage.setItem('token', data.token);
           setIsLoggedIn(true);
           navigate('/');

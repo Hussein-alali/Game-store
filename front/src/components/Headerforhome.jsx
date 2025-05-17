@@ -6,11 +6,11 @@ const Headerforhome = ({ isLoggedIn, setIsLoggedIn }) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Check if user is admin from stored user data
+    
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        // Decode the JWT token to get user data
+        
         const tokenData = JSON.parse(atob(token.split('.')[1]));
         setIsAdmin(tokenData.isAdmin);
       } catch (error) {
@@ -18,7 +18,7 @@ const Headerforhome = ({ isLoggedIn, setIsLoggedIn }) => {
         setIsAdmin(false);
       }
     }
-  }, [isLoggedIn]); // Re-check when login status changes
+  }, [isLoggedIn]);
 
   const handleSignOut = () => {
     localStorage.removeItem('token');
